@@ -11,6 +11,7 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
+apply plugin: 'idea'
 
 repositories {
 
@@ -97,11 +98,6 @@ jar {
 task afterEclipseImport {
     dependsOn genJaxb
 }
-
-sourceSets.test.java.srcDirs = [
-	'src/test/integrationTests',
-	'src/test/clientTest'
-	]
 
 task wrapper(type: Wrapper) { 
 	gradleVersion = "3.1" 
