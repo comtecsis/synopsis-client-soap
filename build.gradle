@@ -1,0 +1,108 @@
+configurations {
+    jaxb
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'maven'
+
+repositories {
+
+	mavenLocal()
+	maven{
+		credentials{
+			username "admin"
+			password "synopsis2016!"
+		}
+		url "http://10.237.7.97:8081/repository/maven-nexus/"
+	}
+	// Descomentar, y ejecutar clean y eclipse con gradle, para referencia de POI
+	jcenter()  
+	mavenCentral()
+}
+
+group = "pe.com.scotiabank.telebanking"
+version = "1.0"
+
+/*configurations.all {
+    exclude group: "org.slf4j", module: "slf4j-log4j12"
+    exclude group: "log4j", module: "log4j"
+    exclude group: 'commons-logging', module: 'commons-logging'
+}*/
+
+// tag::wsdl[]
+task genJaxb {
+    ext.sourcesDir = "${buildDir}/generated-sources/jaxb"
+    ext.classesDir = "${buildDir}/classes/jaxb"
+    ext.schema = "${buildDir}/../countries.wsdl"
+
+    outputs.dir classesDir
+
+    doLast() {
+        project.ant {
+            taskdef name: "xjc", classname: "com.sun.tools.xjc.XJCTask",
+                    classpath: configurations.jaxb.asPath
+            mkdir(dir: sourcesDir)
+            mkdir(dir: classesDir)
+
+            xjc(destdir: sourcesDir, schema: schema) {
+                arg(value: "-wsdl")
+                produces(dir: sourcesDir, includes: "**/*.java")
+            }
+
+            javac(destdir: classesDir, source: 1.7, target: 1.7, debug: true,
+                    debugLevel: "lines,vars,source",
+                    classpath: configurations.jaxb.asPath,includeantruntime:"false") {
+                src(path: sourcesDir)
+                include(name: "**/*.java")
+                include(name: "*.java")
+            }
+
+            copy(todir: classesDir) {
+                fileset(dir: sourcesDir, erroronmissingdir: false) {
+                    exclude(name: "**/*.java")
+                }
+            }
+        }
+    }
+}
+// end::wsdl[]
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+dependencies {
+    compile(files(genJaxb.classesDir).builtBy(genJaxb))
+    compile("org.springframework.ws:spring-ws-core:2.4.0.RELEASE")
+	compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.3.4'
+	
+    testCompile group: 'org.springframework', name: 'spring-test', version: '4.2.7.RELEASE'
+    testCompile group: 'org.springframework.ws', name: 'spring-ws-test', version: '2.4.0.RELEASE'
+    testCompile 'junit:junit:4.12'
+
+    jaxb "com.sun.xml.bind:jaxb-xjc:2.1.7"
+}
+
+jar {
+    from genJaxb.classesDir
+}
+
+
+task afterEclipseImport {
+    dependsOn genJaxb
+}
+
+sourceSets.test.java.srcDirs = [
+	'src/test/integrationTests',
+	'src/test/clientTest'
+	]
+
+task wrapper(type: Wrapper) { 
+	gradleVersion = "3.1" 
+}

@@ -1,0 +1,1 @@
+Proyecto que contiene el cliente WS de Spring WS
