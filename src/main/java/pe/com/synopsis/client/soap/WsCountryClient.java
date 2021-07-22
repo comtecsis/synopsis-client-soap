@@ -31,9 +31,12 @@ public class WsCountryClient implements Serializable
     }
 
     @SuppressWarnings("unchecked")
-    public GetCountryResponse createSession(GetCountryRequest value)
+    public GetCountryResponse findByName(String value)
     {
-        return (GetCountryResponse) template.marshalSendAndReceive(uri, value, callback);
+        GetCountryRequest request = factory.createGetCountryRequest();
+        request.setName(value);
+        //return (GetCountryResponse) template.marshalSendAndReceive(uri, value, callback);
+        return ((GetCountryResponse) template.marshalSendAndReceive(uri, request, callback));
     }
 
 }

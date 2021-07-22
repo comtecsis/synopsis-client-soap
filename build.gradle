@@ -14,21 +14,12 @@ apply plugin: 'maven'
 apply plugin: 'idea'
 
 repositories {
-
 	mavenLocal()
-	maven{
-		credentials{
-			username "admin"
-			password "synopsis2016!"
-		}
-		url "http://10.237.7.97:8081/repository/maven-nexus/"
-	}
-	// Descomentar, y ejecutar clean y eclipse con gradle, para referencia de POI
-	jcenter()  
+    jcenter()
 	mavenCentral()
 }
 
-group = "pe.com.scotiabank.telebanking"
+group = "pe.com.synopsis"
 version = "1.0"
 
 /*configurations.all {
