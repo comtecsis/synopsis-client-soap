@@ -7,6 +7,7 @@ import org.springframework.ws.client.core.WebServiceMessageCallback;
 import org.springframework.ws.client.core.WebServiceTemplate;
 import ws.synopsis.guides.gs_producing_web_service.*;
 
+
 public class WsCountryClient implements Serializable
 {
     private static final long serialVersionUID = -4184457396269278149L;
@@ -38,24 +39,24 @@ public class WsCountryClient implements Serializable
         return ((GetCountriesResponse) template.marshalSendAndReceive(uri, factory.createGetCountriesRequest(), callback));
     }
     @SuppressWarnings("unchecked")
-    public AddCountryResponse save( String name, Integer population, String capital, Currency currency)
+    public AddCountryResponse save(Country country)
     {
         AddCountryRequest request = factory.createAddCountryRequest();
-            request.setName(name.trim());
-            request.setPopulation(population);
-            request.setCapital(capital.trim());
-            request.setCurrency(currency);
+            request.setName(country.getName());
+            request.setPopulation(country.getPopulation());
+            request.setCapital(country.getCapital());
+            request.setCurrency(country.getCurrency());
         return ((AddCountryResponse) template.marshalSendAndReceive(uri, request, callback));
     }
 
     @SuppressWarnings("unchecked")
-    public UpdateCountryResponse update( String name, Integer population, String capital, Currency currency)
+    public UpdateCountryResponse update( Country country)
     {
         UpdateCountryRequest request = factory.createUpdateCountryRequest();
-            request.setName(name.trim());
-            request.setPopulation(population);
-            request.setCapital(capital.trim());
-            request.setCurrency(currency);
+            request.setName(country.getName());
+            request.setPopulation(country.getPopulation());
+            request.setCapital(country.getCapital());
+            request.setCurrency(country.getCurrency());
         return ((UpdateCountryResponse) template.marshalSendAndReceive(uri, request, callback));
     }
 
