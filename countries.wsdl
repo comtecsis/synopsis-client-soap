@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://spring.io/guides/gs-producing-web-service" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://spring.io/guides/gs-producing-web-service" targetNamespace="http://spring.io/guides/gs-producing-web-service">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://synopsis.ws/guides/gs-producing-web-service" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://synopsis.ws/guides/gs-producing-web-service" targetNamespace="http://synopsis.ws/guides/gs-producing-web-service">
   <wsdl:types>
-    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://spring.io/guides/gs-producing-web-service">
-
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://synopsis.ws/guides/gs-producing-web-service">
+    <!-- Obtener un país dado un nombre-->
     <xs:element name="getCountryRequest">
         <xs:complexType>
             <xs:sequence>
@@ -18,6 +18,69 @@
         </xs:complexType>
     </xs:element>
 
+    <!--Listar todos los países-->
+    <xs:element name="getCountriesRequest">
+        <xs:complexType>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getCountriesResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element maxOccurs="unbounded" name="countriesvalues" type="tns:country"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!--Registrar un nuevo país-->
+    <xs:element name="addCountryRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="population" type="xs:int"/>
+                <xs:element name="capital" type="xs:string"/>
+                <xs:element name="currency" type="tns:currency"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="addCountryResponse">
+        <xs:complexType>
+        </xs:complexType>
+    </xs:element>
+    <!--Actualizar un país dado el nombre del país-->
+    <xs:element name="updateCountryRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+                <xs:element name="population" type="xs:int"/>
+                <xs:element name="capital" type="xs:string"/>
+                <xs:element name="currency" type="tns:currency"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateCountryResponse">
+        <xs:complexType/>
+    </xs:element>
+    <!-- Eliminar un país dado un nombre-->
+    <xs:element name="deleteCountryRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="name" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="deleteCountryResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="country" type="tns:country"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!--Definición de estructuras-->
     <xs:complexType name="country">
         <xs:sequence>
             <xs:element name="name" type="xs:string"/>
@@ -36,30 +99,122 @@
     </xs:simpleType>
 </xs:schema>
   </wsdl:types>
-  <wsdl:message name="getCountryResponse">
-    <wsdl:part element="tns:getCountryResponse" name="getCountryResponse">
+  <wsdl:message name="getCountriesRequest">
+    <wsdl:part element="tns:getCountriesRequest" name="getCountriesRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateCountryResponse">
+    <wsdl:part element="tns:updateCountryResponse" name="updateCountryResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCountriesResponse">
+    <wsdl:part element="tns:getCountriesResponse" name="getCountriesResponse">
     </wsdl:part>
   </wsdl:message>
   <wsdl:message name="getCountryRequest">
     <wsdl:part element="tns:getCountryRequest" name="getCountryRequest">
     </wsdl:part>
   </wsdl:message>
+  <wsdl:message name="deleteCountryResponse">
+    <wsdl:part element="tns:deleteCountryResponse" name="deleteCountryResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="deleteCountryRequest">
+    <wsdl:part element="tns:deleteCountryRequest" name="deleteCountryRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addCountryRequest">
+    <wsdl:part element="tns:addCountryRequest" name="addCountryRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="updateCountryRequest">
+    <wsdl:part element="tns:updateCountryRequest" name="updateCountryRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="addCountryResponse">
+    <wsdl:part element="tns:addCountryResponse" name="addCountryResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCountryResponse">
+    <wsdl:part element="tns:getCountryResponse" name="getCountryResponse">
+    </wsdl:part>
+  </wsdl:message>
   <wsdl:portType name="CountriesPort">
+    <wsdl:operation name="getCountries">
+      <wsdl:input message="tns:getCountriesRequest" name="getCountriesRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:getCountriesResponse" name="getCountriesResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateCountry">
+      <wsdl:input message="tns:updateCountryRequest" name="updateCountryRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:updateCountryResponse" name="updateCountryResponse">
+    </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getCountry">
       <wsdl:input message="tns:getCountryRequest" name="getCountryRequest">
     </wsdl:input>
       <wsdl:output message="tns:getCountryResponse" name="getCountryResponse">
     </wsdl:output>
     </wsdl:operation>
+    <wsdl:operation name="deleteCountry">
+      <wsdl:input message="tns:deleteCountryRequest" name="deleteCountryRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:deleteCountryResponse" name="deleteCountryResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addCountry">
+      <wsdl:input message="tns:addCountryRequest" name="addCountryRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:addCountryResponse" name="addCountryResponse">
+    </wsdl:output>
+    </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="CountriesPortSoap11" type="tns:CountriesPort">
     <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getCountries">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="getCountriesRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCountriesResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="updateCountry">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="updateCountryRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="updateCountryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
     <wsdl:operation name="getCountry">
       <soap:operation soapAction=""/>
       <wsdl:input name="getCountryRequest">
         <soap:body use="literal"/>
       </wsdl:input>
       <wsdl:output name="getCountryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="deleteCountry">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="deleteCountryRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="deleteCountryResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="addCountry">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="addCountryRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="addCountryResponse">
         <soap:body use="literal"/>
       </wsdl:output>
     </wsdl:operation>
